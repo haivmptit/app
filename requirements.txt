@@ -1,0 +1,13 @@
+requests==2.24.0
+psycopg2==2.8.6
+pybase64==1.0.1
+Datetime==4.3
+numpy==1.18.5
+Pillow==7.2.0
+mxnet
+mtcnn==0.1.0
+insightface==0.1.5
+scikit-image==0.17.2
+flask==1.1.2
+flask_cors==3.0.8
+keras==2.4.3
