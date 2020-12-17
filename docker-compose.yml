@@ -3,21 +3,47 @@ services:
   postgres:
     restart: always
     image: postgres:10
+    container_name: db
     env_file:
       - database.env
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      - connect_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   app:
     restart: always
     build: .
+    container_name: app
     ports:
-      - 5000:5000
+      - 80:5000
     volumes:
       - .:/app
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     entrypoint: [ "python", "app.py" ]
+    networks:
+      - connect_network
+    environment:
+      WEB_CONCURRENCY: 1
+      LOG_LEVEL: "info"
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 volumes:
   postgres:
+
+networks:
+  connect_network:
+    name: network
+    driver: bridge

@@ -1,10 +1,5 @@
-import base64
-import cv2, io
 import numpy as np
-from numpy import asarray
-from PIL import Image
 from insightface.model_zoo import get_model
-from numpy.linalg import norm
 
 from server.face_processing import face_align
 
@@ -15,7 +10,6 @@ model.prepare(ctx_id=ctx_id)
 from mtcnn.mtcnn import MTCNN
 
 detector = MTCNN()
-
 
 def get_face(Img):
     faces = detector.detect_faces(Img)

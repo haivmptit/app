@@ -4,6 +4,7 @@ def connection():
         database="demo1",
         user="postgres",
         password="songuyento",
-        host="localhost",
+        # host="localhost",
+        host="postgres",
         port="5432")
     return conn

@@ -1,12 +1,9 @@
 # start import lib
-import base64, io, cv2, numpy as np
+import base64, io, numpy as np
 from PIL import Image
-from flask import jsonify
 from server.face_processing.processing import get_face, get_emberding
 from numpy.linalg import norm
 from server.db.connectDB import connection
-from datetime import datetime
-# from server.person import Person
 
 connect = connection()
 def signup(PerSon):
@@ -19,7 +16,7 @@ def signup(PerSon):
     try:
         cur = connect.cursor()
         select = " SELECT * FROM person WHERE username = '%s' " % (username)
-        cur.execute(select) # kiểm tra tên đăng nhập đã tồn tại hay chưa
+        cur.execute(select)  # kiểm tra tên đăng nhập đã tồn tại hay chưa
         data = cur.fetchall()
         if (len(data) > 0):
             note = "Usename existed!!!"
@@ -31,9 +28,6 @@ def signup(PerSon):
             img = base64.b64decode(str(imgBase64))  # giải mã ảnh khuôn mặt đăng kí
             img = Image.open(io.BytesIO(img))
             img= np.array(img)
-            # img = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2RGB)
-            # cv2.imshow('t', img)
-            # cv2.waitKey(0)
             face = get_face(img)
             note = ""
             if face is None:  # kiểm tra khuôn mặt trong ảnh đăng kí
@@ -41,6 +35,7 @@ def signup(PerSon):
             if note != "":
                 result = {'status': 0, 'result': note}
                 return result
+
                 # return jsonify({'status': 0, 'result': note})
             else:
                 face_emberding = get_emberding(face)  # lấy đặc trưng khuôn mặt
@@ -51,8 +46,10 @@ def signup(PerSon):
                     username, name, phone, email, sex, face_str, str(imgBase64))
                 cur.execute(insert) # lưu các thông tin người dùng vào db
                 connect.commit()
+                # connect.close()
                 print("Sign up successfully")
                 result = {'status': 1}
+
                 return result
                 # return jsonify({'status': 1})
     except Exception as e:
