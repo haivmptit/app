@@ -8,7 +8,7 @@ from server.dao import daoPerson
 UPLOAD_FOLDER = './static/'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
-# config server
+
 app = Flask(__name__)
 CORS(app)
 
