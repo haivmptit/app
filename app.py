@@ -2,10 +2,9 @@
 import flask
 from datetime import datetime
 from server.entity.person import Person
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-
+from server.dao import daoPerson
 UPLOAD_FOLDER = './static/'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
@@ -25,15 +24,14 @@ def time(s1, s2):
     ms1 = int(s1[9:12])
     ms2 = int(s2[9:12])
     return (hour2 - hour1) * 3600 + (min2 - min1) * 60 + (second2 - second1) + (ms2-ms1)/1000
-#
-# # # handle http
-# #
-# #
+
+
 @app.route("/huyen")
 def index1():
     return "Hello REVA!"
-#
-@app.route("/sign_up", methods=['POST'])
+
+
+@app.route("/sign_up", methods=['POST','GET'])
 def sign_up():
     time_start = str(datetime.now().time())
     request_json = request.get_json()
@@ -56,14 +54,15 @@ def sign_up():
         return jsonify({'status': 0, 'result': note, 'time_processing': time(time_start, time_end)})
     else:
         person = Person(username, name, phone, email, sex, None, face_base64)
-        result = person.sign_up()
+        result = daoPerson.signup(person)
+        # result = person.sign_up()
         time_end = str(datetime.now().time())
         time_processing = time(time_start, time_end)
         result['time_processing'] = time_processing
         return jsonify(result)
         # return person.sign_up()
 
-@app.route("/login", methods=['POST'])
+@app.route("/login", methods=['POST','GET'])
 def login():
     time_start = str(datetime.now().time())
     request_json = request.get_json()
@@ -78,8 +77,12 @@ def login():
         time_end = str(datetime.now().time())
         return jsonify({'status': 0, 'result': note, 'time_processing': time(time_start, time_end)})
     else:
-        person = Person(username, None, None, None, None, None, face_base64)
-        result = person.login()
+        # person = Person(username, None, None, None, None, None, face_base64)
+        info={'username': username,
+              'face_base64': face_base64}
+        result = daoPerson.login(**info)
+        # result = daoPerson.login(person)
+        # result = person.login()
         time_end = str(datetime.now().time())
         time_processing = time(time_start, time_end)
         result['time_processing'] = time_processing
@@ -87,7 +90,7 @@ def login():
         # return person.login()
 
 
-@app.route("/return_profile", methods=['POST'])
+@app.route("/return_profile", methods=['POST','GET'])
 def return_profile():
     time_start = str(datetime.now().time())
     request_json = request.get_json()
@@ -98,16 +101,15 @@ def return_profile():
     print("Dữ liệu nhận được: " + "username: " + username)
     print("-----------------------------------------------------------------------------------------------------------")
     person = Person(username, None, None, None, None, None, None)
-    result = person.return_profile()
+    result = daoPerson.return_profile(person)
     time_end = str(datetime.now().time())
     time_processing = time(time_start, time_end)
     result['time_processing'] = time_processing
     return jsonify(result)
-    # return person.return_profile()
-    # return jsonify(result)
 
 
-@app.route("/edit_profile", methods=['POST'])
+
+@app.route("/edit_profile", methods=['POST','GET'])
 def edit_profile():
     time_start = str(datetime.now().time())
     request_json = request.get_json()
@@ -125,14 +127,13 @@ def edit_profile():
     print(
         "------------------------------------------------------------------------------------------------------------")
     person = Person(username, name, phone, email, sex, None, face_base64)
-    result = person.change_profile()
+    # result = person.change_profile()
+    result = daoPerson.change_profile(person)
     time_end = str(datetime.now().time())
     time_processing = time(time_start, time_end)
     result['time_processing'] = time_processing
     return jsonify(result)
 
-
-    # return person.change_profile()
 
 @app.after_request
 def add_header(r):
@@ -148,7 +149,5 @@ def add_header(r):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, port=5000)
     # app.run(host='0.0.0.0', debug=True, port=80)
-    # http_server = WSGIServer(('0.0.0.0', 80), app)
-    # http_server.serve_forever()
+    app.run(host='0.0.0.0', debug=True, port=5000)

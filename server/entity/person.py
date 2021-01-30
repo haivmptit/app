@@ -1,6 +1,3 @@
-from server.dao import daoPerson
-
-
 class Person:
     def __init__(self, username, name, phone, email, sex, face_emberding, face_base64):
         self.username = username
@@ -11,14 +8,14 @@ class Person:
         self.face_emberding = face_emberding
         self.face_base64 = face_base64
 
-    def sign_up(self):
-        return daoPerson.signup(self)
-
-    def login(self):
-        return daoPerson.login(self)
-
-    def return_profile(self):
-        return daoPerson.return_profile(self)
-
-    def change_profile(self):
-        return daoPerson.change_profile(self)
+    # def sign_up(self):
+    #     return daoPerson.signup(self)
+    #
+    # def login(self):
+    #     return daoPerson.login(self)
+    #
+    # def return_profile(self):
+    #     return daoPerson.return_profile(self)
+    #
+    # def change_profile(self):
+    #     return daoPerson.change_profile(self)

@@ -4,7 +4,7 @@ from PIL import Image
 from server.face_processing.processing import get_face, get_emberding
 from numpy.linalg import norm
 from server.db.connectDB import connection
-
+THRESH = 0.53
 connect = connection()
 def signup(PerSon):
     imgBase64 = PerSon.face_base64
@@ -60,9 +60,12 @@ def signup(PerSon):
         # return jsonify({'status': 0, 'result': note})
 
 
-def login(Person):
-    username = Person.username
-    imgBase64 = Person.face_base64
+# def login(Person):
+def login(**args):
+    username = args.get('username')
+    imgBase64 = args.get('face_base64')
+    # imgBase64 = Person.username
+    # imgBase64 = Person.face_base64
     try:
         cur = connect.cursor()
         select = " SELECT * FROM person WHERE username = '%s' " % (username)
@@ -106,7 +109,7 @@ def login(Person):
                 print("Độ tương đồng giữa 2 khuôn mặt là: ", sim)
                 print(
                     "------------------------------------------------------------------------------------------------------------")
-                if (sim > 0.53): #so sánh với ngưỡng
+                if (sim > THRESH): #so sánh với ngưỡng
                     print("Login successfully!!")
                     result = {'status': 1, 'username': username,
                                     'name': name, 'phone': phone,

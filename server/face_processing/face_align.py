@@ -3,44 +3,6 @@ import numpy as np
 from skimage import transform as trans
 
 
-# def parse_lst_line(line):
-#   vec = line.strip().split("\t")
-#   assert len(vec)>=3
-#   aligned = int(vec[0])
-#   image_path = vec[1]
-#   label = int(vec[2])
-#   bbox = None
-#   landmark = None
-#   #print(vec)
-#   if len(vec)>3:
-#     bbox = np.zeros( (4,), dtype=np.int32)
-#     for i in range(3,7):
-#       bbox[i-3] = int(vec[i])
-#     landmark = None
-#     if len(vec)>7:
-#       _l = []
-#       for i in range(7,17):
-#         _l.append(float(vec[i]))
-#       landmark = np.array(_l).reshape( (2,5) ).T
-#   #print(aligned)
-#   return image_path, label, bbox, landmark, aligned
-
-
-# def read_image(img_path, **kwargs):
-#   mode = kwargs.get('mode', 'rgb')
-#   layout = kwargs.get('layout', 'HWC')
-#   if mode=='gray':
-#     img = cv2.imread(img_path, cv2.CV_LOAD_IMAGE_GRAYSCALE)
-#   else:
-#     img = cv2.imread(img_path, cv2.CV_LOAD_IMAGE_COLOR)
-#     if mode=='rgb':
-#       img = img[...,::-1]
-#     if layout=='CHW':
-#       img = np.transpose(img, (2,0,1))
-#   return img
-#
-
-
 def preprocess(img, bbox=None, landmark=None, **kwargs):
     # if isinstance(img, str):
     #   img = read_image(img, **kwargs)
@@ -68,8 +30,9 @@ def preprocess(img, bbox=None, landmark=None, **kwargs):
 
         tform = trans.SimilarityTransform()
         tform.estimate(dst, src)
+        # print(tform)
+        # print(tform.params)
         M = tform.params[0:2, :]
-        # M = cv2.estimateRigidTransform( dst.reshape(1,5,2), src.reshape(1,5,2), False)
 
     if M is None:
         if bbox is None:  # use center crop
