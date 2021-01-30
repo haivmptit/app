@@ -127,7 +127,7 @@ def edit_profile():
     print(
         "------------------------------------------------------------------------------------------------------------")
     person = Person(username, name, phone, email, sex, None, face_base64)
-    # result = person.change_profile()
+
     result = daoPerson.change_profile(person)
     time_end = str(datetime.now().time())
     time_processing = time(time_start, time_end)
