@@ -1,10 +1,10 @@
 # start import lib
 import flask
 from datetime import datetime
-from server.entity.person import Person
+# from server.entity.person import Person
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from server.dao import daoPerson
+# from server.dao import daoPerson
 UPLOAD_FOLDER = './static/'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
